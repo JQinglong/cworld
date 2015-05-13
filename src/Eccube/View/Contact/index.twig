@@ -1,0 +1,58 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
+
+http://www.lockon.co.jp/
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#}
+{% extends 'site_main.twig' %}
+
+{% form_theme form _self %}
+
+{% block _contact_email_widget %}
+    {%- set attr = attr|merge({'class': 'box380', 'style': 'ime-mode: active;'}) -%}
+    {{ block('email_widget') }}
+{% endblock %}
+
+{% block _contact_contents_widget %}
+    {%- set attr = attr|merge({'class': 'box380', 'style': 'ime-mode: active;', 'cols': "60", 'rows': "20"}) -%}
+    {{ block('textarea_widget') }}
+{% endblock %}
+
+{% block main %}
+    <div id="undercolumn">
+        <h2 class="title">{{ title }}</h2>
+
+        <div id="undercolumn_contact">
+
+            <p>内容によっては回答をさしあげるのにお時間をいただくこともございます。<br />
+                また、休業日は翌営業日以降の対応となりますのでご了承ください。</p>
+
+            <form name="form1" id="form1" method="post" action="?"{{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+
+                <div class="btn_area">
+                    <ul>
+                        <li>
+                            <input type="image" class="hover_change_image" src="{{ app.config.tpl }}img/button/btn_confirm.jpg" alt="確認ページへ" name="mode" value="confirm" />
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

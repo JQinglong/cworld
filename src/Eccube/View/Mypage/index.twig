@@ -1,0 +1,73 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
+
+http://www.lockon.co.jp/
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#}
+{% extends 'site_main.twig' %}
+
+{% block main %}
+<div id="mypagecolumn">
+    <h2 class="title">{{ title }}</h2>
+    {% include 'Mypage/navi.twig' %}
+    <div id="mycontents_area">
+        <h3>{{ subtitle }}</h3>
+
+        {% if pagination.totalItemCount > 0 %}
+            <p><span class="attention">{{ pagination.totalItemCount }}件</span>の購入履歴があります。</p>
+            <div class="pagenumber_area">
+                <!--▼ページナビ-->
+                {% include "pagination.twig" with {'pages': pagination.paginationData} %}
+                <!--▲ページナビ-->
+            </div>
+
+            <table summary="購入履歴">
+                <tr>
+                    <th class="alignC">購入日時</th>
+                    <th class="alignC">注文番号</th>
+                    <th class="alignC">お支払い方法</th>
+                    <th class="alignC">合計金額</th>
+                    {% if app.config.mypage_order_status_disp_flag %}
+                        <th class="alignC">ご注文状況</th>
+                    {% endif %}
+                    <th class="alignC">詳細</th>
+                </tr>
+                {% for Order in pagination %}
+                    <tr>
+                        <td class="alignC">{{ Order.create_date|date("Y/m/d H:i:s") }}</td>
+                        <td>{{ Order.id }}</td>
+                        <td class="alignC">{{ Order.Payment }}</td>
+                        <td class="alignR">{{ Order.payment_total|number_format }}円</td>
+
+                        {% if app.config.mypage_order_status_disp_flag %}
+                            {% if Order.CustomerOrderStatus.id != app.config.order_pending %}
+                                <td class="alignC">{{ Order.CustomerOrderStatus }}</td>
+                            {% else %}
+                                <td class="alignC attention">{{ Order.CustomerOrderStatus }}</td>
+                            {% endif %}
+                        {% endif %}
+                        <td class="alignC"><a href="{{ path('mypage_history', {'orderId': Order.id}) }}">詳細</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>購入履歴はありません。</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
